@@ -22,13 +22,13 @@ create table photos (
 		REFERENCES reviews (id)
 );
 
-create table characteristic (
+create table characteristics (
 	id serial primary key,
 	product_id int,
 	name varchar(100)
 );
 
-create table characteristic_review (
+create table characteristics_reviews (
 	id serial primary key,
 	characteristic_id int,
 	review_id int,

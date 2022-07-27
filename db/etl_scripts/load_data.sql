@@ -45,13 +45,13 @@ CSV HEADER;
 
 -- import directly into characteristic
 
-COPY characteristic (id, product_id, name)
+COPY characteristics (id, product_id, name)
 FROM './data/characteristics.csv'
 DELIMITER ','
 CSV HEADER;
 
 -- import directly into characteristic_review
-COPY characteristic_review (id, characteristic_id, review_id, value)
+COPY characteristics_reviews (id, characteristic_id, review_id, value)
 FROM './data/characteristic_reviews.csv'
 DELIMITER ','
 CSV HEADER;
