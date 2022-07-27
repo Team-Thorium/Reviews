@@ -1,4 +1,5 @@
 -- create tables --
+drop table reviews;
 create table reviews (
 	id serial primary key,
 	product_id int,
@@ -14,6 +15,7 @@ create table reviews (
 	helpfulness int
 );
 
+drop table photos;
 create table photos (
 	id serial primary key,
 	review_id int,
@@ -22,12 +24,14 @@ create table photos (
 		REFERENCES reviews (id)
 );
 
+drop table characteristics;
 create table characteristics (
 	id serial primary key,
 	product_id int,
 	name varchar(100)
 );
 
+drop table characteristics_reviews;
 create table characteristics_reviews (
 	id serial primary key,
 	characteristic_id int,

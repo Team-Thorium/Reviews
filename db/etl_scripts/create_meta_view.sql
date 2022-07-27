@@ -1,4 +1,4 @@
-create view ratings_view as
+create or replace view ratings_view as
 	select product_id,
 		SUM(CASE WHEN rating = 1 THEN 1 ELSE 0 END) as "1",
 		SUM(CASE WHEN rating = 2 THEN 1 ELSE 0 END) as "2",
@@ -9,14 +9,14 @@ create view ratings_view as
 	group by product_id;
 
 
-create view recommend_view as
+create or replace view recommend_view as
 	select product_id,
 		SUM(CASE WHEN recommend = true THEN 1 ELSE 0 END) as true,
 		SUM(CASE WHEN recommend = false THEN 1 ELSE 0 END) as false
 	from reviews
 	group by product_id;
 
-create view characteristics_meta_view as
+create or replace view characteristics_meta_view as
 	select
 		c.product_id,
 		c.id char_id,
@@ -27,7 +27,7 @@ create view characteristics_meta_view as
 	on c.id = cr.characteristic_id
 	group by c.id, c.product_id, c.name;
 
-create view reviews_view as
+create or replace view reviews_view as
 	select
 		id as review_id,
 		rating,
@@ -44,7 +44,7 @@ create view reviews_view as
 	from reviews r
 	group by product_id;
 
-create view meta_view as
+create or replace view meta_view as
 	select
 		product_id,
 		(select row_to_json(ratings) from
