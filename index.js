@@ -120,6 +120,20 @@ app.put('/reviews/:review_id/helpful', (req, res) => {
     })
 });
 
+app.put('/reviews/:review_id/report', (req, res) => {
+  const id = req.params.review_id;
+  Reviews.update(
+    { reported: true },
+    { where: { id: id }}
+  )
+    .then(() => {
+      res.sendStatus(204);
+    })
+    .catch((err) => {
+      console.log('error updating reported', err);
+      res.sendStatus(500);
+    })
+});
 
 app.listen(process.env.PORT, () => {
   console.log('listening on port', process.env.PORT);
