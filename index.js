@@ -30,6 +30,7 @@ app.get('/reviews', (req, res) => {
     })
     .catch(err => {
       console.log('error getting review data from database', err);
+      res.sendStatus(500);
     })
 });
 
@@ -45,6 +46,7 @@ app.get('/reviews/meta', (req, res) => {
     })
     .catch((err) => {
       console.log('error getting meta data from database', err);
+      res.sendStatus(500);
     })
 });
 
@@ -97,10 +99,27 @@ app.post('/reviews', (req, res) => {
       res.sendStatus(201);
     } catch (err) {
       console.log('error creating new review', err);
+      res.sendStatus(500);
     }
   }
   create();
 });
+
+app.put('/reviews/:review_id/helpful', (req, res) => {
+  const id = req.params.review_id;
+  Reviews.increment(
+      { helpfulness: 1 },
+      { where: { id: id }}
+  )
+    .then(() => {
+      res.sendStatus(204);
+    })
+    .catch((err) => {
+      console.log('error updating helpfulness', err);
+      res.sendStatus(500);
+    })
+});
+
 
 app.listen(process.env.PORT, () => {
   console.log('listening on port', process.env.PORT);
