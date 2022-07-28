@@ -1,4 +1,5 @@
 -- create staging table for reviews, and import data
+drop table reviews_staging;
 create table reviews_staging (
 	id varchar(2000),
 	product_id varchar(2000),
@@ -14,10 +15,7 @@ create table reviews_staging (
 	helpfulness  varchar(2000)
 );
 
-COPY reviews_staging (id, product_id, rating, date, summary, body, recommend, reported, reviewer_name, reviewer_email, response, helpfulness)
-FROM './data/reviews.csv'
-DELIMITER ','
-CSV HEADER;
+\COPY reviews_staging (id, product_id, rating, date, summary, body, recommend, reported, reviewer_name, reviewer_email, response, helpfulness) FROM './data/reviews.csv' DELIMITER ',' CSV HEADER;
 
 -- convert and insert from staging into reviews
 insert into reviews
@@ -38,20 +36,11 @@ insert into reviews
 
 
 -- import directly into photos
-COPY photos (id, review_id, url)
-FROM './data/reviews_photos.csv'
-DELIMITER ','
-CSV HEADER;
+\COPY photos (id, review_id, url) FROM './data/reviews_photos.csv' DELIMITER ',' CSV HEADER
 
 -- import directly into characteristic
 
-COPY characteristics (id, product_id, name)
-FROM './data/characteristics.csv'
-DELIMITER ','
-CSV HEADER;
+\COPY characteristics (id, product_id, name) FROM './data/characteristics.csv' DELIMITER ',' CSV HEADER;
 
 -- import directly into characteristic_review
-COPY characteristics_reviews (id, characteristic_id, review_id, value)
-FROM './data/characteristic_reviews.csv'
-DELIMITER ','
-CSV HEADER;
+\COPY characteristics_reviews (id, characteristic_id, review_id, value) FROM './data/characteristic_reviews.csv' DELIMITER ',' CSV HEADER;

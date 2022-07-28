@@ -1,5 +1,8 @@
 -- create tables --
-drop table reviews;
+drop table characteristics_reviews CASCADE;
+drop table characteristics CASCADE;
+drop table photos CASCADE;
+drop table reviews CASCADE;
 create table reviews (
 	id serial primary key,
 	product_id int,
@@ -15,7 +18,6 @@ create table reviews (
 	helpfulness int
 );
 
-drop table photos;
 create table photos (
 	id serial primary key,
 	review_id int,
@@ -24,21 +26,19 @@ create table photos (
 		REFERENCES reviews (id)
 );
 
-drop table characteristics;
 create table characteristics (
 	id serial primary key,
 	product_id int,
 	name varchar(100)
 );
 
-drop table characteristics_reviews;
 create table characteristics_reviews (
 	id serial primary key,
 	characteristic_id int,
 	review_id int,
 	value int,
 	FOREIGN KEY (characteristic_id)
-		REFERENCES characteristic (id),
+		REFERENCES characteristics (id),
 	FOREIGN KEY (review_id)
 		REFERENCES reviews (id)
 );

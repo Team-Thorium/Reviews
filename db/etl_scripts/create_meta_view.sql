@@ -21,7 +21,7 @@ create or replace view characteristics_meta_view as
 		c.product_id,
 		c.id char_id,
 		c.name,
-		AVG(cr.value)::numeric(10,4) as value
+		AVG(cr.value) as value
 	from characteristics c
 	inner join characteristics_reviews cr
 	on c.id = cr.characteristic_id
@@ -30,6 +30,7 @@ create or replace view characteristics_meta_view as
 create or replace view reviews_view as
 	select
 		id as review_id,
+		product_id,
 		rating,
 		summary,
 		recommend,
@@ -41,8 +42,7 @@ create or replace view reviews_view as
 		(select json_agg(photos) from
 		(select p.id, p.url from photos p where p.review_id = r.id) as photos
 		) as photos
-	from reviews r
-	group by product_id;
+	from reviews r;
 
 create or replace view meta_view as
 	select
@@ -58,7 +58,7 @@ create or replace view meta_view as
 		(select
 				jsonb_object_agg(name,
 					(select row_to_json(char) from
-						(select char_id as id, value
+						(select char_id as id, value::VARCHAR
 						from characteristics_meta_view cm where cm.char_id = c.char_id and cm.product_id = c.product_id) as char
 					)
 				)
