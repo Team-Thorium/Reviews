@@ -1,27 +1,30 @@
 require('dotenv').config();
-const _ = require('underscore');
-const db = require('./db/db');
+const { db, Reviews, Photos, Characteristics_reviews } = require('./db/db');
+const { QueryTypes } = require('sequelize');
 const express = require('express');
 const app = express();
 
 app.use(express.json());
 
 app.get('/reviews', (req, res) => {
-  const page = req.query.page || 0;
-  const count = req.query.count || 5;
+  const page = Number(req.query.page) || 0;
+  const count = Number(req.query.count) || 5;
   const offset = page * count;
   const sortParam = req.query?.sort?.toLowerCase() || 'relevant';
-  const sort = sortParam === 'newest' ? 'date' : sortParam === 'helpful' ? 'helpfulness' : 'recommend';
-  const productId = req.query.product_id;
+  const sort = sortParam === 'newest' ? 8 : sortParam === 'helpful' ? 10 : 5;
+  const productId = Number(req.query.product_id);
 
-  db.query(`SELECT * FROM reviews_view WHERE product_id = ? ORDER BY ? DESC OFFSET ? LIMIT ?`, [productId, sort, offset, count])
+  db.query('SELECT * FROM reviews_view WHERE product_id = ? ORDER BY ? DESC OFFSET ? LIMIT ?',
+  {
+    replacements: [productId, sort, offset, count],
+    type: QueryTypes.SELECT
+  })
     .then((results) => {
-      console.log(results.rows);
       res.json({
         product: productId,
         page,
         count,
-        results: results.rows,
+        results: results,
       });
       res.end();
     })
@@ -32,9 +35,12 @@ app.get('/reviews', (req, res) => {
 
 app.get('/reviews/meta', (req, res) => {
   const productId = req.query.product_id;
-  db.query(`SELECT * FROM meta_view WHERE product_id = $1`, [productId])
+  db.query(`SELECT * FROM meta_view WHERE product_id = ?`, {
+    replacements: [productId],
+    type: QueryTypes.SELECT
+  })
     .then((results) => {
-      res.json(results.rows);
+      res.json(results);
       res.end();
     })
     .catch((err) => {
@@ -44,6 +50,7 @@ app.get('/reviews/meta', (req, res) => {
 
 
 app.post('/reviews', (req, res) => {
+  console.log(req.body);
   const productId = req.body.product_id;
   const rating = req.body.rating;
   const summary = req.body.summary;
@@ -54,14 +61,45 @@ app.post('/reviews', (req, res) => {
   const photos = req.body.photos;
   const characteristics = req.body.characteristics;
 
-  db.query('')
-  // insert statement into reviews RETURNING id
-    // productId, rating, summary, body, recommend, name, email
-    // with the new id,
-      // iterate through photos
-        // insert into photos with reviewId
-      // iterate through characteristics (char_id: value)
-        // insert into characteristics, char_id, reviewId, value
+  console.log(rating);
+  async function create() {
+    try {
+      const result = await db.transaction(async (t) => {
+        const review = await Reviews.create({
+          product_id: productId,
+          rating,
+          date: new Date(),
+          summary,
+          body,
+          recommend,
+          reported: false,
+          response: null,
+          reviewer_name: name,
+          reviewer_email: email,
+          helpfulness: 0,
+        }, { transaction: t });
+
+        for (const photo of photos) {
+          const photoRes = await Photos.create({
+            review_id: review.id,
+            url: photo,
+          }, { transaction: t });
+        }
+
+        for (const characteristic_id in characteristics) {
+          const char = await Characteristics_reviews.create({
+            characteristic_id,
+            review_id: review.id,
+            value: characteristics[characteristic_id],
+          }, { transaction: t });
+        }
+      })
+      res.sendStatus(201);
+    } catch (err) {
+      console.log('error creating new review', err);
+    }
+  }
+  create();
 });
 
 app.listen(process.env.PORT, () => {
