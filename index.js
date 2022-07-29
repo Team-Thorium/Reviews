@@ -20,6 +20,7 @@ app.get('/reviews', (req, res) => {
     type: QueryTypes.SELECT
   })
     .then((results) => {
+      res.type('application/json')
       res.json({
         product: productId,
         page,
@@ -41,6 +42,7 @@ app.get('/reviews/meta', (req, res) => {
     type: QueryTypes.SELECT
   })
     .then((results) => {
+      res.type('application/json')
       res.json(results);
       res.end();
     })
@@ -52,7 +54,6 @@ app.get('/reviews/meta', (req, res) => {
 
 
 app.post('/reviews', (req, res) => {
-  console.log(req.body);
   const productId = req.body.product_id;
   const rating = req.body.rating;
   const summary = req.body.summary;
@@ -63,7 +64,6 @@ app.post('/reviews', (req, res) => {
   const photos = req.body.photos;
   const characteristics = req.body.characteristics;
 
-  console.log(rating);
   async function create() {
     try {
       const result = await db.transaction(async (t) => {
@@ -138,3 +138,6 @@ app.put('/reviews/:review_id/report', (req, res) => {
 app.listen(process.env.PORT, () => {
   console.log('listening on port', process.env.PORT);
 });
+
+
+module.exports = app;
