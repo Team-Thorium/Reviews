@@ -3,7 +3,7 @@ const assert = require('assert');
 const app = require('../index.js');
 // request = request.bind(request, );
 
-xdescribe('GET /reviews', function() {
+describe('GET /reviews', function() {
   it('responds with status 200 and a json object', function(done) {
     request(app)
       .get('/reviews')
@@ -44,8 +44,7 @@ xdescribe('GET /reviews', function() {
   })
 });
 
-
-xdescribe('GET /reviews/meta', function() {
+describe('GET /reviews/meta', function() {
   it('responds with status 200 and a json object', function(done) {
     // will have to optimize query to be below default timeout of 2000ms,
     // and delete code below
@@ -90,7 +89,7 @@ xdescribe('GET /reviews/meta', function() {
   })
 });
 
-xdescribe('POST /reviews', function() {
+describe('POST /reviews', function() {
   it('Successfully posts a review and is able to retrieve it', function(done) {
     const data = {
       product_id: 1,

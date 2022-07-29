@@ -2,9 +2,11 @@ require('dotenv').config();
 const { db, Reviews, Photos, Characteristics_reviews } = require('./db/db');
 const { QueryTypes } = require('sequelize');
 const express = require('express');
+const cors = require('cors');
 const app = express();
 
 app.use(express.json());
+app.use(cors);
 
 app.get('/reviews', (req, res) => {
   const page = Number(req.query.page) || 0;
