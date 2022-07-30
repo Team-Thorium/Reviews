@@ -11,16 +11,25 @@ app.use(express.json());
 // app.use(cors);
 
 app.get('/reviews', (req, res) => {
-  const page = Number(req.query.page) || 0;
-  const count = Number(req.query.count) || 5;
+  const page = req.query.page || 0;
+  const count = req.query.count || 5;
   const offset = page * count;
   const sortParam = req.query?.sort?.toLowerCase() || 'relevant';
-  const sort = sortParam === 'newest' ? 8 : sortParam === 'helpful' ? 10 : 5;
-  const productId = Number(req.query.product_id);
+  const sort = sortParam === 'newest' ? 8 : 10;
+  const productId = req.query.product_id;
+  let query = '';
+  let params = [];
+  if (sortParam === 'relevant') {
+    query = 'SELECT * FROM reviews_view WHERE product_id = ? ORDER BY ? DESC, ? DESC OFFSET ? LIMIT ?';
+    params = [productId, 10, 8, offset, count];
+  } else {
+    query = 'SELECT * FROM reviews_view WHERE product_id = ? ORDER BY ? DESC OFFSET ? LIMIT ?';
+    params = [productId, sort, offset, count];
+  }
 
-  db.query('SELECT * FROM reviews_view WHERE product_id = ? ORDER BY ? DESC OFFSET ? LIMIT ?',
+  db.query(query,
   {
-    replacements: [productId, sort, offset, count],
+    replacements: params,
     type: QueryTypes.SELECT
   })
     .then((results) => {

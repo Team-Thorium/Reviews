@@ -1,5 +1,5 @@
-db/data
+data/data
 .env
-db/logs/*load.*
+data/logs/*load.*
 node_modules
 package-lock.json

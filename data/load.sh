@@ -11,7 +11,7 @@ PARENT_PATH=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
 OUTPUT_FILE="logs/${CURRENTDATE}-load.out"
 SCRIPTS1='./etl_scripts/create_table.sql'
 SCRIPTS2='./etl_scripts/create_index.sql'
-SCRIPTS3='./etl_scripts/create_meta_view.sql'
+SCRIPTS3='./etl_scripts/create_view.sql'
 SCRIPTS4='./etl_scripts/load_data.sql'
 SCRIPTS=($SCRIPTS1 $SCRIPTS2 $SCRIPTS3 $SCRIPTS4)
 
