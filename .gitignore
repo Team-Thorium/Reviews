@@ -1,1 +1,5 @@
-db/data
+data/data
+.env
+data/logs/*load.*
+node_modules
+package-lock.json

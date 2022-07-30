@@ -1,0 +1,36 @@
+{
+  "name": "thorium-reviews",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha __tests__/",
+    "start": "node index.js",
+    "start-dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Team-Thorium/Thorium-Reviews.git"
+  },
+  "author": "mariahirai",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Team-Thorium/Thorium-Reviews/issues"
+  },
+  "homepage": "https://github.com/Team-Thorium/Thorium-Reviews#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "k6": "^0.0.0",
+    "newrelic": "^8.17.0",
+    "pg": "^8.7.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.21.3"
+  },
+  "devDependencies": {
+    "chakram": "^1.5.0",
+    "mocha": "^10.0.0",
+    "supertest": "^6.2.4"
+  }
+}
