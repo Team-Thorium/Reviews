@@ -4,9 +4,11 @@ const { QueryTypes } = require('sequelize');
 const express = require('express');
 const cors = require('cors');
 const app = express();
+require('newrelic');
+
 
 app.use(express.json());
-app.use(cors);
+// app.use(cors);
 
 app.get('/reviews', (req, res) => {
   const page = Number(req.query.page) || 0;
