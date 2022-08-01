@@ -44,3 +44,10 @@ insert into reviews
 
 -- import directly into characteristic_review
 \COPY characteristics_reviews (id, characteristic_id, review_id, value) FROM './data/characteristic_reviews.csv' DELIMITER ',' CSV HEADER;
+
+
+-- reset sequence of ids after import
+SELECT setval('reviews_id_seq', (SELECT MAX(id) FROM "reviews"));
+SELECT setval('photos_id_seq', (SELECT MAX(id) FROM "photos"));
+SELECT setval('characteristics_id_seq', (SELECT MAX(id) FROM "characteristics"));
+SELECT setval('characteristics_reviews_id_seq', (SELECT MAX(id) FROM "characteristics_reviews"));
