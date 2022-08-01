@@ -1,5 +1,5 @@
-data/data
+data_load/data
 .env
-data/logs/*load.*
+data_load/logs/*load.*
 node_modules
 package-lock.json
