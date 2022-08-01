@@ -16,7 +16,7 @@ export const options = {
   //   { target: 0, duration: '1m' },
   // ],
   vus: 1000,
-  duration: '15s',
+  duration: '30s',
   thresholds: {
     http_reqs: ['count < 100'],
   },
@@ -25,7 +25,8 @@ export const options = {
 export default function () {
   // our HTTP request, note that we are saving the response to res, which can be accessed later
 
-  const res = http.get('http://localhost:3000/reviews?product_id=1');
+  // const res = http.get('http://localhost:3000/reviews?product_id=1');
+  const res = http.get('http://54.224.109.189/reviews?product_id=1&sort=newest&page=2');
 
   sleep(1);
 
