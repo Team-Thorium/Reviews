@@ -5,9 +5,8 @@ const app = express();
 const router = require('./routes');
 // require('newrelic');
 
-
 app.use(express.json());
-
+app.use(cors());
 app.use('/', router);
 
 app.listen(process.env.PORT, () => {
