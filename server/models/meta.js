@@ -1,11 +1,11 @@
-const { db } = require('../db/db');
 const { QueryTypes } = require('sequelize');
+const { db } = require('../db/db');
 
 module.exports = {
-  getMeta: (product_id) => {
-    return db.query(`SELECT * FROM meta_view WHERE product_id = ?`, {
-      replacements: [product_id],
-      type: QueryTypes.SELECT
+  getMeta: (productId) => (
+    db.query('SELECT * FROM meta_view WHERE product_id = ?', {
+      replacements: [productId],
+      type: QueryTypes.SELECT,
     })
-  }
-}
+  ),
+};

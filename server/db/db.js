@@ -1,20 +1,25 @@
+/* eslint-disable no-console */
 require('dotenv').config();
 const { Sequelize, DataTypes } = require('sequelize');
 
-const sequelize = new Sequelize(process.env.PGDATABASE, process.env.PGUSER, process.env.PG_PASSWORD, {
+const database = process.env.PGDATABASE;
+const user = process.env.PGUSER;
+const password = process.env.PG_PASSWORD;
+
+const sequelize = new Sequelize(database, user, password, {
   host: process.env.PG_HOST,
   dialect: 'postgres',
   define: {
-    timestamps: false
-}
-})
+    timestamps: false,
+  },
+});
 
 sequelize.authenticate()
-  .then (()=>{
+  .then(() => {
     console.log('Connection has been established successfully.');
   })
   .catch((error) => {
-  console.error('Unable to connect to the database:', error);
+    console.error('Unable to connect to the database:', error);
   });
 
 const Reviews = sequelize.define('reviews', {
@@ -22,7 +27,7 @@ const Reviews = sequelize.define('reviews', {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     allowNull: false,
-    primaryKey: true
+    primaryKey: true,
   },
   product_id: DataTypes.INTEGER,
   rating: DataTypes.INTEGER,
@@ -56,7 +61,7 @@ const Photos = sequelize.define('photos', {
 //   name: DataTypes.STRING,
 // })
 
-const Characteristics_reviews = sequelize.define('characteristics_reviews', {
+const CharacteristicsReviews = sequelize.define('characteristics_reviews', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -65,12 +70,11 @@ const Characteristics_reviews = sequelize.define('characteristics_reviews', {
   characteristic_id: DataTypes.INTEGER,
   review_id: DataTypes.INTEGER,
   value: DataTypes.INTEGER,
-})
+});
 
 module.exports = {
   db: sequelize,
   Reviews,
   Photos,
-  // Characteristics,
-  Characteristics_reviews,
+  CharacteristicsReviews,
 };

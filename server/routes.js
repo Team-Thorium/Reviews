@@ -11,5 +11,4 @@ router.put('/reviews/:review_id/helpful', controllers.reviews.putHelpful);
 
 router.put('/reviews/:review_id/report', controllers.reviews.putReport);
 
-
 module.exports = router;
