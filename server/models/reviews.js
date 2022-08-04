@@ -3,6 +3,7 @@
 /* eslint-disable object-curly-newline */
 /* eslint-disable camelcase */
 const { QueryTypes } = require('sequelize');
+const _ = require('underscore');
 const { db, Reviews, Photos, CharacteristicsReviews } = require('../db/db');
 
 module.exports = {
@@ -30,11 +31,11 @@ module.exports = {
     name,
     email,
     photos,
-    characteristics
+    characteristics,
   }) => {
     async function create() {
       try {
-        await db.transaction(async (t) => {
+        await db.transaction().then(async (t) => {
           const review = await Reviews.create({
             product_id,
             rating,
@@ -58,7 +59,7 @@ module.exports = {
             })();
           });
 
-          characteristics.forEach((characteristicId) => {
+          _.each(characteristics, (characteristicId) => {
             (async () => {
               await CharacteristicsReviews.create({
                 characteristic_id: characteristicId,
