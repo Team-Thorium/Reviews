@@ -36,8 +36,9 @@ create or replace view reviews_view as select
 		date,
 		reviewer_name,
 		helpfulness,
-		(select json_agg(photos) from
-		(select p.id, p.url from photos p where p.review_id = r.id) as photos
+		(
+			select coalesce(json_agg(photos), '[]'::json) from
+			(select p.id, p.url from photos p where p.review_id = r.id) as photos
 		) as photos
 	from reviews r
 	where reported = false;
