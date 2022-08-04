@@ -33,47 +33,44 @@ module.exports = {
     photos,
     characteristics,
   }) => {
-    async function create() {
-      try {
-        await db.transaction().then(async (t) => {
-          const review = await Reviews.create({
-            product_id,
-            rating,
-            date: new Date(),
-            summary,
-            body,
-            recommend,
-            reported: false,
-            response: null,
-            reviewer_name: name,
-            reviewer_email: email,
-            helpfulness: 0,
-          }, { transaction: t });
-
-          photos.forEach((photo) => {
-            (async () => {
-              await Photos.create({
+    try {
+      return db.transaction((t) => (
+        Reviews.create({
+          product_id,
+          rating,
+          date: new Date(),
+          summary,
+          body,
+          recommend,
+          reported: false,
+          response: null,
+          reviewer_name: name,
+          reviewer_email: email,
+          helpfulness: 0,
+        }, { transaction: t })
+          .then((review) => {
+            const promises = [];
+            photos.forEach((photo) => {
+              promises.push(Photos.create({
                 review_id: review.id,
                 url: photo,
-              }, { transaction: t });
-            })();
-          });
+              }, { transaction: t }));
+            });
 
-          _.each(characteristics, (characteristicId) => {
-            (async () => {
-              await CharacteristicsReviews.create({
+            _.each(characteristics, (characteristicId) => {
+              promises.push(CharacteristicsReviews.create({
                 characteristic_id: characteristicId,
                 review_id: review.id,
                 value: characteristics[characteristicId],
-              }, { transaction: t });
-            })();
-          });
-        });
-      } catch (err) {
-        console.log('error creating new review', err);
-      }
+              }, { transaction: t }));
+            });
+
+            return Promise.all(promises);
+          })
+      ));
+    } catch (err) {
+      console.log('error creating new review', err);
     }
-    return create();
   },
 
   updateHelpful: (reviewId) => (
