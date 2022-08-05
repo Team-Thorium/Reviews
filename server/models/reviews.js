@@ -4,7 +4,7 @@
 /* eslint-disable camelcase */
 const { QueryTypes } = require('sequelize');
 const _ = require('underscore');
-const { readDb, Reviews, Photos, CharacteristicsReviews } = require('../db/db');
+const { readDb, writeDb, Reviews, Photos, CharacteristicsReviews } = require('../db/db');
 
 module.exports = {
   getAll: ({ page, count = 5, sort = 1, product_id }) => {
@@ -34,7 +34,7 @@ module.exports = {
     characteristics,
   }) => {
     try {
-      return db.transaction((t) => (
+      return writeDb.transaction((t) => (
         Reviews.create({
           product_id,
           rating,
