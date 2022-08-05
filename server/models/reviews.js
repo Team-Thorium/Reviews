@@ -4,7 +4,7 @@
 /* eslint-disable camelcase */
 const { QueryTypes } = require('sequelize');
 const _ = require('underscore');
-const { db, Reviews, Photos, CharacteristicsReviews } = require('../db/db');
+const { readDb, Reviews, Photos, CharacteristicsReviews } = require('../db/db');
 
 module.exports = {
   getAll: ({ page, count = 5, sort = 1, product_id }) => {
@@ -13,7 +13,7 @@ module.exports = {
     if (sort === 'newest') sort = 8;
     if (sort === 'helpful') sort = 10;
 
-    return db.query(
+    return readDb.query(
       'SELECT * FROM reviews_view WHERE product_id = :product_id ORDER BY :sort DESC OFFSET :offset LIMIT :count',
       {
         replacements: { product_id, sort, offset, count },

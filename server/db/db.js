@@ -7,7 +7,7 @@ const user = process.env.PGUSER;
 const password = process.env.PG_PASSWORD;
 
 const sequelize = new Sequelize(database, user, password, {
-  host: process.env.PG_HOST,
+  host: process.env.PG_WRITE_HOST,
   dialect: 'postgres',
   define: {
     timestamps: false,
@@ -72,8 +72,25 @@ const CharacteristicsReviews = sequelize.define('characteristics_reviews', {
   value: DataTypes.INTEGER,
 });
 
+const replica = new Sequelize(database, user, password, {
+  host: process.env.PG_READ_HOST,
+  dialect: 'postgres',
+  define: {
+    timestamps: false,
+  },
+});
+
+replica.authenticate()
+  .then(() => {
+    console.log('Connection has been established successfully.');
+  })
+  .catch((error) => {
+    console.error('Unable to connect to the database:', error);
+  });
+
 module.exports = {
-  db: sequelize,
+  writeDb: sequelize,
+  readDb: replica,
   Reviews,
   Photos,
   CharacteristicsReviews,
