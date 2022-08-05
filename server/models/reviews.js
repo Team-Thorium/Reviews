@@ -50,21 +50,20 @@ module.exports = {
         }, { transaction: t })
           .then((review) => {
             const promises = [];
-            photos.forEach((photo) => {
-              promises.push(Photos.create({
-                review_id: review.id,
-                url: photo,
-              }, { transaction: t }));
-            });
-
-            _.each(characteristics, (characteristicId) => {
-              promises.push(CharacteristicsReviews.create({
-                characteristic_id: characteristicId,
-                review_id: review.id,
-                value: characteristics[characteristicId],
-              }, { transaction: t }));
-            });
-
+            promises.push(Photos.bulkCreate(
+              photos.map((photo) => ({ review_id: review.id, url: photo })),
+              { transaction: t },
+            ));
+            promises.push(CharacteristicsReviews.bulkCreate(
+              _.map(characteristics, (characteristicId) => (
+                {
+                  characteristic_id: characteristicId,
+                  review_id: review.id,
+                  value: characteristics[characteristicId],
+                }
+              )),
+              { transaction: t },
+            ));
             return Promise.all(promises);
           })
       ));
