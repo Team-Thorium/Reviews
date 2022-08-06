@@ -6,7 +6,7 @@ module.exports = {
     models.meta.getMeta(req.query.product_id)
       .then((results) => {
         res.type('application/json');
-        res.json(results);
+        res.json(results[0]);
         res.end();
       })
       .catch((err) => {
