@@ -6,12 +6,9 @@ module.exports = {
   get: (req, res) => {
     models.reviews.getAll(req.query)
       .then((results) => {
-        const result = { ...results };
-        _.each(result, (key) => {
-          result[key].photos = result[key].photos ? result[key].photos : [];
+        results.forEach(data => {
+          data.photos = data.photos ? data.photos : [];
         });
-        console.log(result);
-
         res.type('application/json');
         res.json({
           product: req.query.product_id,

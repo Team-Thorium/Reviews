@@ -9,15 +9,18 @@ const { readDb, writeDb, Reviews, Photos, CharacteristicsReviews } = require('..
 module.exports = {
   getAll: ({ page, count = 5, sort = 1, product_id }) => {
     page = page - 1 || 0;
+    count = Number(count);
     const offset = page * count;
     if (sort === 'newest') sort = 8;
     if (sort === 'helpful') sort = 10;
+    if (sort === 'relevant') sort = 1;
 
     return readDb.query(
       'SELECT * FROM reviews_view WHERE product_id = :product_id ORDER BY :sort DESC OFFSET :offset LIMIT :count',
       {
         replacements: { product_id, sort, offset, count },
-        type: QueryTypes.SELECT,
+        type: 'raw',
+        plain: false,
       },
     );
   },
