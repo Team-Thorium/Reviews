@@ -1,10 +1,14 @@
 /* eslint-disable no-console */
 const models = require('../models');
+const _ = require('underscore');
 
 module.exports = {
   get: (req, res) => {
     models.reviews.getAll(req.query)
       .then((results) => {
+        results.forEach(data => {
+          data.photos = data.photos ? data.photos : [];
+        });
         res.type('application/json');
         res.json({
           product: req.query.product_id,

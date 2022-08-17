@@ -18,7 +18,6 @@ create or replace view recommend_view as select product_id,
 create or replace view characteristics_meta_view as select
 		c.product_id,
 		c.id char_id,
-		c.name,
 		AVG(cr.value) as value
 	from characteristics c
 	inner join characteristics_reviews cr
@@ -43,25 +42,19 @@ create or replace view reviews_view as select
 	from reviews r
 	where reported = false;
 
-create or replace view meta_view as select
-		product_id,
-		(select row_to_json(ratings) from
-			(select "1", "2", "3", "4", "5"
-			from ratings_view rv where rv.product_id = r.product_id) as ratings
-		) as ratings,
-		(select row_to_json(rec) from
-				(select "false"::VARCHAR, "true"::VARCHAR
-				from recommend_view rev where rev.product_id = r.product_id) as rec
-			) as recommended,
-		(select
-				jsonb_object_agg(name,
-					(select row_to_json(char) from
-						(select char_id as id, value::VARCHAR
-						from characteristics_meta_view cm where cm.char_id = c.char_id and cm.product_id = c.product_id) as char
-					)
-				)
-		from characteristics_meta_view c
-		where product_id = r.product_id
+create or replace view meta_view as
+with products as (
+	select distinct product_id from reviews
+)
+select
+		r.product_id,
+		json_build_object('1', rv."1", '2', rv."2", '3', rv."3", '4',rv."4", '5', rv."5") as ratings,
+		json_build_object('false', rev."false", 'true', rev."true") as recommended,
+		json_build_object(c.name,
+			json_build_object('id', cm.char_id, 'value', cm."value")
 		) as characteristics
-	from reviews r
-	group by product_id;
+	from products r
+  inner join ratings_view rv on rv.product_id = r.product_id
+	inner join recommend_view rev on rev.product_id = r.product_id
+	inner join characteristics c on c.product_id = r.product_id
+	inner join characteristics_meta_view cm on (cm.char_id = c.id and cm.product_id = c.product_id);
