@@ -1,7 +1,7 @@
 <div id="top"/>
 
 # Reviews API
-A microservice Backend API development for Ratings and Reviews of a modern retail e-commerce website.
+A microservice backend API development for Ratings and Reviews of a modern retail e-commerce website.
 
 ## Tech Stack
 ![Javascript](https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E)
@@ -22,7 +22,7 @@ GET /reviews
 ```
 Query Parameters
 | Parameter        | Type           | Description  |
-| ------------- |:-------------:| -----:|
+| ------------- |-------------| -----|
 | page | integer | Selects the page of results to return. Default 1. |
 | count | integer | Specifies how many results per page to return. Default 5. |
 | sort | text | Changes the sort order of reviews to be based on "newest", "helpful", or "relevant" |
@@ -87,7 +87,7 @@ GET /reviews/meta
 ```
 Query Parameters
 | Parameter        | Type           | Description  |
-| ------------- |:-------------:| -----:|
+| ------------- |-------------| -----|
 | product_id | integer | Specifies the product for which to retrieve reviews. |
 
 Response
@@ -131,7 +131,7 @@ POST /reviews
 ```
 Body Parameters
 | Parameter        | Type           | Description  |
-| ------------- |:-------------:| -----:|
+| ------------- |-------------| -----|
 | product_id | integer | Required ID of the product to post the review for |
 | rating | integer | Integer (1-5) indicating the review rating |
 | summary | text | Summary text of the review |
@@ -156,7 +156,7 @@ PUT /reviews/:review_id/helpful
 ```
 Parameters
 | Parameter        | Type           | Description  |
-| ------------- |:-------------:| -----:|
+| ------------- |-------------| -----|
 | review_id | integer | Required ID of the review to update |
 
 Response
@@ -171,7 +171,7 @@ PUT /reviews/:review_id/report
 ```
 Parameters
 | Parameter        | Type           | Description  |
-| ------------- |:-------------:| -----:|
+| ------------- |-------------| -----|
 | review_id | integer | Required ID of the review to update |
 
 Response
